@@ -32,6 +32,8 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - repopick: Utility to fetch changes from Gerrit.
 - installboot: Installs a boot.img to the connected device.
 - installrecovery: Installs a recovery.img to the connected device.
+- cleanproduct: Clean the device 's out dir.
+- cproduct: Go to device directory.
 
 Look at the source to view more functions. The complete list is:
 EOF
@@ -985,6 +987,16 @@ function croot()
     T=$(gettop)
     if [ "$T" ]; then
         \cd $(gettop)
+    else
+        \cd $ANDROID_BUILD_TOP
+    fi
+}
+function cproduct()
+{
+    croot
+    T=$(gettop)
+    if [ "$T" ]; then
+ 	cd $(gettop)/device/*/$CM_BUILD
     else
         echo "Couldn't locate the top of the tree.  Try setting TOP."
     fi
@@ -2530,6 +2542,15 @@ function repopick() {
     $T/build/tools/repopick.py $@
 }
 
+function cleanproduct(){
+	if [[ $OUT ]]
+	then
+	rm -fr $OUT/*
+        echo "clean $OUT"
+	else
+	echo "Can't find the OUT DIR . Maybe you should lunch the device at first!"
+	fi
+}
 function fixup_common_out_dir() {
     common_out_dir=$(get_build_var OUT_DIR)/target/common
     target_device=$(get_build_var TARGET_DEVICE)
