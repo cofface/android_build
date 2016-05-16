@@ -45,7 +45,7 @@ echo "ro.board.platform=$TARGET_BOARD_PLATFORM"
 
 if [ "$TARGET_UNIFIED_DEVICE" == "" ] ; then
   echo "# ro.build.product is obsolete; use ro.product.device"
-  echo "ro.build.product=$TARGET_DEVICE"
+  echo "ro.build.product=$COFFACE_BUILD_PRODUCT"
   if [ -z "$TARGET_SKIP_PRODUCT_DEVICE" ] ; then
     echo "ro.product.model=$PRODUCT_MODEL"
   fi
