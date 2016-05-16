@@ -1015,7 +1015,17 @@ function croot()
     if [ "$T" ]; then
         \cd $(gettop)
     else
-        echo "Couldn't locate the top of the tree.  Try setting TOP."
+        \cd $ANDROID_BUILD_TOP
+		fi
+}
+function cproduct()
+{
+	croot
+	T=$(gettop)
+	if [ "$T" ]; then
+		cd $(gettop)/device/*/$CM_BUILD
+		else
+		echo "Couldn't locate the top of the tree.  Try setting TOP."
     fi
 }
 
@@ -2364,6 +2374,16 @@ alias cmkap='dopush cmka'
 function repopick() {
     T=$(gettop)
     $T/build/tools/repopick.py $@
+}
+
+function cleanproduct(){
+	if [[ $OUT ]]
+	then
+	rm -fr $OUT/*
+        echo "clean $OUT"
+	else
+	echo "Can't find the OUT DIR . Maybe you should lunch the device at first!"
+	fi
 }
 
 function fixup_common_out_dir() {
