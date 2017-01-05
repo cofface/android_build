@@ -20,6 +20,9 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 - sepgrep:   Greps on all local sepolicy files.
 - sgrep:     Greps on all local source files.
 - godir:     Go to the directory containing a file.
+- cleanproduct: Clean the device 's out dir.
+- cout:      Changes directory to out.
+- cproduct: Go to device directory.
 
 EOF
 
@@ -123,13 +126,33 @@ function get_build_var()
       command make --no-print-directory -f build/core/config.mk dumpvar-$1)
 }
 
+function cproduct()
+{
+    croot
+    T=$(gettop)
+    if [ "$T" ]; then
+        cd $(gettop)/device/*/$CM_BUILD
+    else
+        echo "Couldn't locate the top of the tree.  Try setting TOP."
+    fi
+}
+ 
+function cleanproduct(){
+   if [[ $OUT ]]
+   then
+   rm -fr $OUT/*
+         echo "clean $OUT"
+   else
+   echo "Can't find the OUT DIR . Maybe you should lunch the device at first!"
+   fi
+ }
+
 # check to see if the supplied product is one we can build
 function check_product()
 {
     T=$(gettop)
     if [ ! "$T" ]; then
-        echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
-        return
+        \cd $ANDROID_BUILD_TOP
     fi
 
     if (echo -n $1 | grep -q -e "^cm_") ; then
@@ -1488,8 +1511,7 @@ function runtest()
 {
     T=$(gettop)
     if [ ! "$T" ]; then
-        echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
-        return
+        \cd $ANDROID_BUILD_TOP
     fi
     ("$T"/development/testrunner/runtest.py $@)
 }
